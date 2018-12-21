@@ -18,7 +18,7 @@ router.get('/', async (ctx, next) => {
     console.log(error);
   });
 
-  await page.type('#id_awb_1', '3423234', {delay: 100});
+  await page.type('#id_awb_1', '12508300', {delay: 100});
   const inputElement = await page.$('input[name=submit_awb]');
 
   await Promise.all([
@@ -26,7 +26,7 @@ router.get('/', async (ctx, next) => {
       page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
   ]);
 
-  const result = await page.evaluate(() => document.querySelector('.message[role=alert]').innerText);
+  const result = await page.evaluate(() => document.querySelector('.list').innerText);
   // console.log(result);
 
   ctx.body = result;
