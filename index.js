@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
@@ -16,7 +17,7 @@ app.get('/track', async (req, res) => {
   if(!cargoNumber) return res.json({error: 'Не указан номер груза'});
 
   const browser = await puppeteer.connect({
-    browserWSEndpoint: 'ws://46.101.203.108:3000'
+    browserWSEndpoint: process.env.PUPPETEER_HOST
   });
 
   const page = await browser.newPage();
@@ -25,6 +26,6 @@ app.get('/track', async (req, res) => {
   browser.close();
 });
 
-app.listen(3000, function () {
-  console.log('App listening on port 3000!');
+app.listen(8000, function () {
+  console.log('App listening on port 8000!');
 });
