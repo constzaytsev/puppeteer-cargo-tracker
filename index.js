@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors')
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
 
@@ -7,6 +8,7 @@ const Aeroflot = require('./databases/aeroflot.js');
 const Pulkovo = require('./databases/pulkovo.js');
 
 const app = express();
+app.use(cors());
 
 app.get('/track', async (req, res) => {
 
