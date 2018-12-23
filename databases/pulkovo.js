@@ -1,3 +1,6 @@
+const sanitizeHtml = require('sanitize-html');
+const minify = require('html-minifier').minify;
+
 module.exports = async (page, cargoPrefix, cargoNumber) => {
   await page.goto('https://pulkovo-cargo.ru/clients/dispatch',{ waitUntil: 'domcontentloaded' });
   await page.evaluate((cargoPrefix, cargoNumber) => {
@@ -11,8 +14,11 @@ module.exports = async (page, cargoPrefix, cargoNumber) => {
   ]);
 
   if (await page.$('.tracking-table') !== null) {
+    const html = await page.evaluate(() => document.querySelector('#response').innerHTML);
     return {
-      'result': await page.evaluate(() => JSON.stringify(document.querySelector('#response').innerHTML))
+      'success': minify(sanitizeHtml(html), {
+        collapseWhitespace: true
+      })
     }
   }
   else return {

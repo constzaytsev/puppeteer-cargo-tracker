@@ -1,3 +1,6 @@
+const sanitizeHtml = require('sanitize-html');
+const minify = require('html-minifier').minify;
+
 module.exports = async (page, cargoPrefix, cargoNumber) => {
   await page.goto('https://www.aeroflot.ru/personal/cargo_tracking?preferredLanguage=ru',{ waitUntil: 'domcontentloaded' });
   await page.evaluate((cargoPrefix, cargoNumber) => {
@@ -11,8 +14,11 @@ module.exports = async (page, cargoPrefix, cargoNumber) => {
   ]);
 
   if (await page.$('.list') !== null) {
+    const html = await page.evaluate(() => document.querySelector('.list').outerHTML);
     return {
-      'result': await page.evaluate(() => JSON.stringify(document.querySelector('.list').outerHTML))
+      'success': minify(sanitizeHtml(html), {
+        collapseWhitespace: true
+      })
     }
   }
   else return {

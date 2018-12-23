@@ -21,8 +21,10 @@ app.get('/track', async (req, res) => {
   });
 
   const page = await browser.newPage();
-  const result = await Pulkovo(page, cargoPrefix, cargoNumber);
-  res.json(result);
+  const result = await Aeroflot(page, cargoPrefix, cargoNumber);
+  res.json({
+    result: result
+  });
   browser.close();
 });
 
