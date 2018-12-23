@@ -1,41 +1,30 @@
-const Koa = require('koa');
-const Router = require('koa-router');
+const express = require('express');
+const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
 
-const app = new Koa();
-const router = new Router();
+const Aeroflot = require('./databases/aeroflot.js');
+const Pulkovo = require('./databases/pulkovo.js');
 
-router.get('/', async (ctx, next) => {
+const app = express();
+
+app.get('/track', async (req, res) => {
+
+  const cargoPrefix  = req.query.prefix;
+  const cargoNumber  = req.query.number;
+
+  if(!cargoPrefix) return res.json({error: 'Не указан префикс груза'});
+  if(!cargoNumber) return res.json({error: 'Не указан номер груза'});
+
   const browser = await puppeteer.connect({
-    browserWSEndpoint: 'wss://chrome.browserless.io/'
+    browserWSEndpoint: 'ws://46.101.203.108:3000'
   });
 
   const page = await browser.newPage();
-
-  await page.goto('https://www.aeroflot.ru/personal/cargo_tracking?preferredLanguage=ru',{waitUntil: 'domcontentloaded'}).then(() => {
-    console.log('load');
-  }).catch((error) => {
-    console.log(error);
-  });
-
-  await page.type('#id_awb_1', '12508300', {delay: 100});
-  const inputElement = await page.$('input[name=submit_awb]');
-
-  await Promise.all([
-      inputElement.click(),
-      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  ]);
-
-  const result = await page.evaluate(() => document.querySelector('.list').innerText);
-  // console.log(result);
-
-  ctx.body = result;
-
+  const result = await Pulkovo(page, cargoPrefix, cargoNumber);
+  res.json(result);
   browser.close();
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
-
-app.listen(3000);
+app.listen(3000, function () {
+  console.log('App listening on port 3000!');
+});
