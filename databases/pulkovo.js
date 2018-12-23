@@ -1,12 +1,12 @@
 module.exports = async (page, cargoPrefix, cargoNumber) => {
   await page.goto('https://pulkovo-cargo.ru/clients/dispatch',{ waitUntil: 'domcontentloaded' });
-  await page.type('#blankPrefix', cargoPrefix);
-  await page.type('#blankNumber', cargoNumber);
+  await page.evaluate((cargoPrefix, cargoNumber) => {
+    document.querySelector('#blankPrefix').value = cargoPrefix;
+    document.querySelector('#blankNumber').value = cargoNumber;
+  }, cargoPrefix, cargoNumber);
   const inputElement = await page.$('button#get-tracking');
   await Promise.all([
-      page.waitFor(() =>
-        document.querySelectorAll('.tracking-table, .error-status').length
-      ),
+      page.waitForResponse('https://pulkovo-cargo.ru/site/tracking'),
       inputElement.click(),
   ]);
 

@@ -4,11 +4,10 @@ module.exports = async (page, cargoPrefix, cargoNumber) => {
     document.querySelector('#id_awb_0').value = cargoPrefix;
     document.querySelector('#id_awb_1').value = cargoNumber;
   }, cargoPrefix, cargoNumber);
-
   const inputElement = await page.$('input[name=submit_awb]');
   await Promise.all([
-      inputElement.click(),
       page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      inputElement.click(),
   ]);
 
   if (await page.$('.list') !== null) {
