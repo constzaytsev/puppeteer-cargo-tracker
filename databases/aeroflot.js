@@ -2,7 +2,7 @@ const sanitizeHtml = require('sanitize-html');
 const minify = require('html-minifier').minify;
 
 module.exports = async (page, cargoPrefix, cargoNumber) => {
-  await page.goto('https://www.aeroflot.ru/personal/cargo_tracking?preferredLanguage=ru',{ waitUntil: 'domcontentloaded' });
+  await page.goto('https://www.aeroflot.ru/personal/cargo_tracking?preferredLanguage=ru&_preferredLocale=ru&_preferredLanguage=ru',{ waitUntil: 'domcontentloaded' });
   await page.evaluate((cargoPrefix, cargoNumber) => {
     document.querySelector('#id_awb_0').value = cargoPrefix;
     document.querySelector('#id_awb_1').value = cargoNumber;

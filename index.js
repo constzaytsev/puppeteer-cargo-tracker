@@ -15,15 +15,15 @@ app.get('/track', async (req, res) => {
   const cargoPrefix  = req.query.prefix;
   const cargoNumber  = req.query.number;
 
-  if(!cargoPrefix) return res.json({error: 'Не указан префикс груза'});
-  if(!cargoNumber) return res.json({error: 'Не указан номер груза'});
+  if(!cargoPrefix) return res.json({result: {error: 'Не указан префикс груза'}});
+  if(!cargoNumber) return res.json({result: {error: 'Не указан номер груза'}});
 
   const browser = await puppeteer.connect({
     browserWSEndpoint: process.env.PUPPETEER_HOST
   });
 
   const page = await browser.newPage();
-  const result = await Aeroflot(page, cargoPrefix, cargoNumber);
+  const result = cargoPrefix == 555 ? await Aeroflot(page, cargoPrefix, cargoNumber) : await Pulkovo(page, cargoPrefix, cargoNumber);
   res.json({
     result: result
   });
