@@ -16,7 +16,7 @@ module.exports = async (page, cargoPrefix, cargoNumber) => {
   if (await page.$('.list') !== null) {
     const html = await page.evaluate(() => document.querySelector('.list').outerHTML);
     return {
-      'success': minify(sanitizeHtml(html), {
+      'success': minify(sanitizeHtml(html, {allowedAttributes: {'*': ['colspan']}}), {
         collapseWhitespace: true
       })
     }

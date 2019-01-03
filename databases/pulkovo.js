@@ -16,7 +16,7 @@ module.exports = async (page, cargoPrefix, cargoNumber) => {
   if (await page.$('.tracking-table') !== null) {
     const html = await page.evaluate(() => document.querySelector('#response').innerHTML);
     return {
-      'success': minify(sanitizeHtml(html), {
+      'success': minify(sanitizeHtml(html, {allowedAttributes: {'*': ['colspan']}}), {
         collapseWhitespace: true
       })
     }
