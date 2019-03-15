@@ -2,9 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const puppeteer = require('puppeteer');
-const ua = require('universal-analytics');
-
-const visitor = ua('UA-134136473-1');
 
 const Sentry = require('@sentry/node');
 
@@ -17,10 +14,7 @@ const app = express();
 app.use(Sentry.Handlers.requestHandler());
 app.use(cors());
 
-
 app.get('/track', async (req, res) => {
-  visitor.pageview('/track', '/track', 'Tracking page').send();
-
   const cargoPrefix = req.query.prefix;
   const cargoNumber = req.query.number;
 
@@ -32,7 +26,7 @@ app.get('/track', async (req, res) => {
   }).catch((err) => { throw err; });
 
   const page = await browser.newPage();
-  const result = cargoPrefix === 555
+  const result = cargoPrefix == 555
     ? await Aeroflot(page, cargoPrefix, cargoNumber)
     : await Pulkovo(page, cargoPrefix, cargoNumber);
   res.json({
