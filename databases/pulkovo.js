@@ -1,7 +1,7 @@
-const sanitizeHtml = require('sanitize-html');
-const minify = require('html-minifier').minify;
+import sanitizeHtml from 'sanitize-html';
+import minify from 'html-minifier';
 
-module.exports = async (page, cargoPrefix, cargoNumber) => {
+export default async (page, cargoPrefix, cargoNumber) => {
   await page.goto('https://pulkovo-cargo.ru/clients/dispatch', { waitUntil: 'domcontentloaded' });
   await page.evaluate((cargoPrefix, cargoNumber) => {
     document.querySelector('#blankPrefix').value = cargoPrefix;

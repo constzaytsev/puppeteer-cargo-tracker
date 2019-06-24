@@ -1,14 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const puppeteer = require('puppeteer');
+import express from 'express';
+import cors from 'cors';
+import puppeteer from 'puppeteer';
+import * as Sentry from '@sentry/node';
 
-const Sentry = require('@sentry/node');
+import Aeroflot from './databases/aeroflot';
+import Pulkovo from './databases/pulkovo';
 
 Sentry.init({ dsn: 'https://4ea34bda20f4461386d47ea142c87a36@sentry.io/1371072' });
-
-const Aeroflot = require('./databases/aeroflot.js');
-const Pulkovo = require('./databases/pulkovo.js');
 
 const app = express();
 app.use(Sentry.Handlers.requestHandler());
