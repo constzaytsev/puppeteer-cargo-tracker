@@ -2,6 +2,7 @@ import sanitizeHtml from 'sanitize-html';
 import minify from 'html-minifier';
 
 export default async (page, cargoPrefix, cargoNumber) => {
+  console.log('aeroflot');
   await page.goto('https://www.aeroflot.ru/personal/cargo_tracking?preferredLanguage=ru&_preferredLocale=ru&_preferredLanguage=ru', { waitUntil: 'domcontentloaded' });
   await page.evaluate((cargoPrefix, cargoNumber) => {
     document.querySelector('#id_awb_0').value = cargoPrefix;

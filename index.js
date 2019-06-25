@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import puppeteer from 'puppeteer';
+import { Promise } from 'bluebird';
 import * as Sentry from '@sentry/node';
 
 import Aeroflot from './databases/aeroflot';
@@ -35,12 +36,21 @@ app.get('/track', async (req, res) => {
 
   console.log('new page opened');
 
-  const result = cargoPrefix == 555
-    ? await Aeroflot(page, cargoPrefix, cargoNumber)
-    : await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
+  // const result = cargoPrefix == 555
+  //   ? await Aeroflot(page, cargoPrefix, cargoNumber)
+  //   : await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
+
+  const result = await Promise.any([
+    Aeroflot(page, cargoPrefix, cargoNumber),
+    Pulkovo(page, cargoPrefix, cargoNumber),
+  ]).catch(() => {});
+
+  // const result = await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
+
   res.json({
     result,
   });
+
   browser.close();
 });
 
