@@ -4,11 +4,10 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  await page.goto('https://pulkovo-cargo.ru/ru-ru/clients/dispatch', { waitUntil: 'domcontentloaded' });
+  await page.goto('https://pulkovo-cargo.ru/ru-ru/clients/dispatch', { waitUntil: 'load' });
   await page.evaluate((prefix, number) => {
     document.querySelector('#blankPrefix').value = prefix;
     document.querySelector('#blankNumber').value = number;
@@ -31,5 +30,4 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
   }
 
   browser.close();
-
 });

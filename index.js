@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/node';
 
 import Sheremetevo from './databases/sheremetevo';
 import Pulkovo from './databases/pulkovo';
+import Domodedovo from './databases/domodedovo';
 
 Sentry.init({ dsn: 'https://4ea34bda20f4461386d47ea142c87a36@sentry.io/1371072' });
 
@@ -26,12 +27,12 @@ app.get('/track', async (req, res) => {
   const result = await Promise.any([
     Sheremetevo(cargoPrefix, cargoNumber),
     Pulkovo(cargoPrefix, cargoNumber),
+    Domodedovo(cargoPrefix, cargoNumber),
   ]).catch(() => {});
 
   res.json({
     result,
   });
-
 });
 
 app.use(Sentry.Handlers.errorHandler());

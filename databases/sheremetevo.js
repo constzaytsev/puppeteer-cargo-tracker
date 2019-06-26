@@ -4,21 +4,19 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  await page.goto(`https://www.shercargo.ru/rc_pub/plsql/www_pub.awb_info?p_awb_pr=${cargoPrefix}&p_awb_no=${cargoNumber}`);
+  await page.goto(`https://www.shercargo.ru/rc_pub/plsql/www_pub.awb_info?p_awb_pr=${cargoPrefix}&p_awb_no=${cargoNumber}`, { waitUntil: 'domcontentloaded' });
 
   if (await page.$('.ibox') !== null) {
-
     const data = await page.evaluate(() => {
       let innerHTML = '';
       Array.from(document.querySelectorAll('.ibox')).forEach((el) => {
-        innerHTML = innerHTML + el.innerHTML
-      })
+        innerHTML += el.innerHTML;
+      });
       return innerHTML;
-    })
+    });
 
     const html = minify(sanitizeHtml(data, { allowedAttributes: { '*': ['colspan'] } }), {
       collapseWhitespace: true,
@@ -31,5 +29,4 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
   }
 
   browser.close();
-
 });
