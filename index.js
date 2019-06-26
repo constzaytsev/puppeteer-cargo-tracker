@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer';
 import { Promise } from 'bluebird';
 import * as Sentry from '@sentry/node';
 
-import Aeroflot from './databases/aeroflot';
+import Sheremetevo from './databases/sheremetevo';
 import Pulkovo from './databases/pulkovo';
 
 require('dotenv').config();
@@ -41,7 +41,7 @@ app.get('/track', async (req, res) => {
   //   : await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
 
   const result = await Promise.any([
-    Aeroflot(page, cargoPrefix, cargoNumber),
+    Sheremetevo(page, cargoPrefix, cargoNumber),
     Pulkovo(page, cargoPrefix, cargoNumber),
   ]).catch(() => {});
 
