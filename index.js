@@ -1,13 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import puppeteer from 'puppeteer';
 import { Promise } from 'bluebird';
 import * as Sentry from '@sentry/node';
 
 import Sheremetevo from './databases/sheremetevo';
 import Pulkovo from './databases/pulkovo';
-
-require('dotenv').config();
 
 Sentry.init({ dsn: 'https://4ea34bda20f4461386d47ea142c87a36@sentry.io/1371072' });
 
@@ -24,34 +21,17 @@ app.get('/track', async (req, res) => {
   if (!cargoPrefix) return res.json({ result: { error: 'Не указан префикс груза' } });
   if (!cargoNumber) return res.json({ result: { error: 'Не указан номер груза' } });
 
-  console.log(`connecting to ${process.env.PUPPETEER_HOST}`);
-
-  const browser = await puppeteer.connect({
-    browserWSEndpoint: process.env.PUPPETEER_HOST,
-  }).catch((err) => { throw err; });
-
   console.log('browser created');
 
-  const page = await browser.newPage();
-
-  console.log('new page opened');
-
-  // const result = cargoPrefix == 555
-  //   ? await Aeroflot(page, cargoPrefix, cargoNumber)
-  //   : await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
-
   const result = await Promise.any([
-    Sheremetevo(page, cargoPrefix, cargoNumber),
-    Pulkovo(page, cargoPrefix, cargoNumber),
+    Sheremetevo(cargoPrefix, cargoNumber),
+    Pulkovo(cargoPrefix, cargoNumber),
   ]).catch(() => {});
-
-  // const result = await Pulkovo(page, cargoPrefix, cargoNumber).catch((error) => { console.log(error); });
 
   res.json({
     result,
   });
 
-  browser.close();
 });
 
 app.use(Sentry.Handlers.errorHandler());

@@ -1,9 +1,14 @@
+import puppeteer from 'puppeteer';
 import { Promise } from 'bluebird';
 import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 
-export default (page, cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-  await page.goto('https://pulkovo-cargo.ru/clients/dispatch', { waitUntil: 'domcontentloaded' });
+export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.goto('https://pulkovo-cargo.ru/ru-ru/clients/dispatch', { waitUntil: 'domcontentloaded' });
   await page.evaluate((prefix, number) => {
     document.querySelector('#blankPrefix').value = prefix;
     document.querySelector('#blankNumber').value = number;
@@ -14,20 +19,17 @@ export default (page, cargoPrefix, cargoNumber) => new Promise(async (resolve, r
     inputElement.click(),
   ]);
 
-  const fs = new Promise(async (res) => {
-    if (await page.$('.tracking-table') !== null) {
-      const html = minify(sanitizeHtml(await page.evaluate(() => document.querySelector('#response').innerHTML), { allowedAttributes: { '*': ['colspan'] } }), {
-        collapseWhitespace: true,
-      });
-      res({
-        success: html,
-      });
-    }
-  });
-
-  fs.timeout(3000).then((re) => {
-    resolve(re);
-  }).catch(Promise.TimeoutError, () => {
+  if (await page.$('.tracking-table') !== null) {
+    const html = minify(sanitizeHtml(await page.evaluate(() => document.querySelector('#response').innerHTML), { allowedAttributes: { '*': ['colspan'] } }), {
+      collapseWhitespace: true,
+    });
+    resolve({
+      success: html,
+    });
+  } else {
     reject();
-  });
+  }
+
+  browser.close();
+
 });
