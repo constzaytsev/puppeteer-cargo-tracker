@@ -4,7 +4,7 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto('https://business.dme.ru/cargo/e-cargo/info/', { waitUntil: 'domcontentloaded' });
