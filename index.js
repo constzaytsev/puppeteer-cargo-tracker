@@ -26,11 +26,13 @@ app.get('/track', async (req, res) => {
   console.log('browser created');
 
   const result = await Promise.any([
-    Sheremetevo(cargoPrefix, cargoNumber),
-    Pulkovo(cargoPrefix, cargoNumber),
+    // Sheremetevo(cargoPrefix, cargoNumber),
+    // Pulkovo(cargoPrefix, cargoNumber),
     Domodedovo(cargoPrefix, cargoNumber),
-    Moscow(cargoPrefix, cargoNumber),
-  ]).catch(() => {});
+    // Moscow(cargoPrefix, cargoNumber),
+  ]).catch((e) => {
+    throw (e);
+  });
 
   res.json({
     result,
