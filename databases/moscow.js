@@ -8,7 +8,7 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto('https://www.moscow-cargo.com/', {
-      waitUntil: 'domcontentloaded',
+      // waitUntil: 'domcontentloaded',
       timeout: 5000,
     });
     await page.evaluate((prefix, number) => {
