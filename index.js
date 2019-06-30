@@ -25,9 +25,9 @@ app.get('/track', async (req, res) => {
   try {
     const result = await Promise.any([
       Pulkovo(cargoPrefix, cargoNumber),
-      // Sheremetevo(cargoPrefix, cargoNumber),
+      Sheremetevo(cargoPrefix, cargoNumber),
       Domodedovo(cargoPrefix, cargoNumber),
-      // Moscow(cargoPrefix, cargoNumber),
+      Moscow(cargoPrefix, cargoNumber),
     ]);
     return res.json({
       success: result,
@@ -43,7 +43,7 @@ app.get('/track', async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
+app.listen(8080, () => {
   /* eslint no-console: 0 */
-  console.log('App listening on port 8000!');
+  console.log('App listening on port 8080!');
 });

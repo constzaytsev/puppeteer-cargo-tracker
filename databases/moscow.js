@@ -1,11 +1,12 @@
 import puppeteer from 'puppeteer';
-import { Promise } from 'bluebird';
 import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
+import NoResultsError from '../plugins/NoResultsError';
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
+  const browser = await puppeteer.launch({ headless: true });
+
   try {
-    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto('https://www.moscow-cargo.com/', {
       // waitUntil: 'domcontentloaded',
@@ -21,23 +22,19 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
       inputElement.click(),
     ]);
 
-    // setTimeout(async () => {
-    const t = await page.$('.cpwi-table tbody#status tr').catch(() => {});
-
-
-    if (t !== null) {
-      const data = await page.evaluate(() => document.querySelector('.cpwi-table').outerHTML);
-      const html = minify(sanitizeHtml(data, { allowedAttributes: { '*': ['colspan'] } }), {
-        collapseWhitespace: true,
-      });
-      browser.close();
-      return resolve({ success: html });
+    if (await page.$('.cpwi-table tbody#status tr') === null) {
+      return reject(new NoResultsError('No results'));
     }
-    browser.close();
-    console.log('dsfsdfsdfsd2222f');
-    return reject('sdfsdf');
-    // }, 5000);
+
+    const data = await page.evaluate(() => document.querySelector('.cpwi-table').outerHTML);
+    const html = minify(sanitizeHtml(data, { allowedAttributes: { '*': ['colspan'] } }), {
+      collapseWhitespace: true,
+    });
+
+    return resolve(html);
   } catch (e) {
     return reject(e);
+  } finally {
+    browser.close();
   }
 });

@@ -9,7 +9,7 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
   try {
     const page = await browser.newPage();
     await page.goto('https://pulkovo-cargo.ru/ru-ru/clients/dispatch', {
-      waitUntil: 'domcontentloaded',
+      // waitUntil: 'domcontentloaded',
       timeout: 5000,
     });
     await page.evaluate((prefix, number) => {
@@ -29,6 +29,7 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
     const html = minify(sanitizeHtml(await page.evaluate(() => document.querySelector('#response').innerHTML), { allowedAttributes: { '*': ['colspan'] } }), {
       collapseWhitespace: true,
     });
+
     return resolve(html);
   } catch (e) {
     return reject(e);

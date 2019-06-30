@@ -18,7 +18,7 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
   try {
     const page = await browser.newPage();
     await page.goto('https://business.dme.ru/cargo/e-cargo/info/', {
-      waitUntil: 'domcontentloaded',
+      // waitUntil: 'domcontentloaded',
       timeout: 5000,
     });
     await page.evaluate((prefix, number) => {
@@ -38,6 +38,7 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
 
     const data = await page.evaluate(() => document.querySelector('.table_style_cargo').outerHTML);
     const html = minify(sanitizeHtml(data, { allowedAttributes: { '*': ['colspan'] } }), { collapseWhitespace: true });
+
     return resolve(html);
   } catch (e) {
     return reject(e);
