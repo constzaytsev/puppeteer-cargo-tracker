@@ -41,7 +41,7 @@ app.get('/track', async (req, res) => {
 
     return res.json({
       result: {
-        success: null,
+        error: 'Не найдено',
       },
     });
   }
