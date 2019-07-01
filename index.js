@@ -30,7 +30,9 @@ app.get('/track', async (req, res) => {
       Moscow(cargoPrefix, cargoNumber),
     ]);
     return res.json({
-      success: result,
+      result: {
+        success: result,
+      },
     });
   } catch (e) {
     e.forEach((error) => {
@@ -38,7 +40,9 @@ app.get('/track', async (req, res) => {
     });
 
     return res.json({
-      success: null,
+      result: {
+        success: null,
+      },
     });
   }
 });
