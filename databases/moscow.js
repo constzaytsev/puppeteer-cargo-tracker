@@ -4,13 +4,16 @@ import { minify } from 'html-minifier';
 import NoResultsError from '../plugins/NoResultsError';
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox']
+  });
 
   try {
     const page = await browser.newPage();
     await page.goto('https://www.moscow-cargo.com/', {
       // waitUntil: 'domcontentloaded',
-      timeout: 5000,
+      timeout: 10000,
     });
     await page.evaluate((prefix, number) => {
       document.querySelector('[name="status_search"]').value = prefix;

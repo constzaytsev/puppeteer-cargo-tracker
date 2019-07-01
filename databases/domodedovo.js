@@ -3,23 +3,24 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 import NoResultsError from '../plugins/NoResultsError';
 
-// const { exec } = require('child_process');
+const { exec } = require('child_process');
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-  // exec('(echo authenticate \'""\'; echo signal newnym; echo quit) | nc localhost 9051');
+  exec('(echo authenticate \'""\'; echo signal newnym; echo quit) | nc localhost 9051');
 
   const browser = await puppeteer.launch({
     headless: true,
-  // args: [
-  //   '--proxy-server=socks5://127.0.0.1:9050',
-  // ],
+    args: [
+      '--no-sandbox',
+      '--proxy-server=socks5://127.0.0.1:9050'
+    ]
   });
 
   try {
     const page = await browser.newPage();
     await page.goto('https://business.dme.ru/cargo/e-cargo/info/', {
-      // waitUntil: 'domcontentloaded',
-      timeout: 5000,
+      waitUntil: 'domcontentloaded',
+      timeout: 10000,
     });
     await page.evaluate((prefix, number) => {
       document.querySelector('[name="NumberFirstPart"]').value = prefix;
