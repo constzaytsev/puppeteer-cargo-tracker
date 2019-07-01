@@ -12,14 +12,13 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
     headless: true,
     args: [
       '--no-sandbox',
-      '--proxy-server=socks5://127.0.0.1:9050'
-    ]
+      '--proxy-server=socks5://127.0.0.1:9050',
+    ],
   });
 
   try {
     const page = await browser.newPage();
     await page.goto('https://business.dme.ru/cargo/e-cargo/info/', {
-      waitUntil: 'domcontentloaded',
       timeout: 10000,
     });
     await page.evaluate((prefix, number) => {

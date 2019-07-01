@@ -6,13 +6,12 @@ import NoResultsError from '../plugins/NoResultsError';
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox']
+    args: ['--no-sandbox'],
   });
 
   try {
     const page = await browser.newPage();
     await page.goto(`https://www.shercargo.ru/rc_pub/plsql/www_pub.awb_info?p_awb_pr=${cargoPrefix}&p_awb_no=${cargoNumber}`, {
-      // waitUntil: 'domcontentloaded',
       timeout: 10000,
     });
 
