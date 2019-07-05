@@ -3,16 +3,16 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 import NoResultsError from '../plugins/NoResultsError';
 
-const { exec } = require('child_process');
+// const { exec } = require('child_process');
 
 export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
-  exec('(echo authenticate \'""\'; echo signal newnym; echo quit) | nc localhost 9051');
+  // exec('(echo authenticate \'""\'; echo signal newnym; echo quit) | nc localhost 9051');
 
   const browser = await puppeteer.launch({
     headless: true,
     args: [
       '--no-sandbox',
-      '--proxy-server=socks5://127.0.0.1:9050',
+      // '--proxy-server=socks5://127.0.0.1:9050',
     ],
   });
 
