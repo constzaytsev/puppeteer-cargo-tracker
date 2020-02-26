@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { Promise } from 'bluebird';
 import * as Sentry from '@sentry/node';
+import cache from './plugins/cache';
 
 import Sheremetevo from './databases/sheremetevo';
 import Pulkovo from './databases/pulkovo';
@@ -15,7 +16,7 @@ app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.errorHandler());
 app.use(cors());
 
-app.get('/track', async (req, res) => {
+app.get('/track', cache(600), async (req, res) => {
   const cargoPrefix = req.query.prefix;
   const cargoNumber = req.query.number;
 
@@ -45,6 +46,10 @@ app.get('/track', async (req, res) => {
       },
     });
   }
+});
+
+app.use((req, res) => {
+  res.status(404).end(); // not found
 });
 
 app.listen(8080, () => {
