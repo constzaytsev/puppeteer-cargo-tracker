@@ -18,7 +18,7 @@
     "html-minifier": "^4.0.0",
     "memory-cache": "^0.2.0",
     "puppeteer": "^5.2.1",
-    "sanitize-html": "^1.27.3"
+    "sanitize-html": "^1.27.4"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
