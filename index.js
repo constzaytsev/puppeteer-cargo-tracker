@@ -9,11 +9,14 @@ import Pulkovo from './databases/pulkovo';
 import Domodedovo from './databases/domodedovo';
 import Moscow from './databases/moscow';
 
-Sentry.init({ dsn: 'https://4ea34bda20f4461386d47ea142c87a36@sentry.io/1371072' });
-
 const app = express();
+
+Sentry.init({
+  dsn: 'https://4ea34bda20f4461386d47ea142c87a36@o183199.ingest.sentry.io/1371072',
+  environment: 'dev',
+});
+
 app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.errorHandler());
 app.use(cors());
 
 app.get('/track', cache(600), async (req, res) => {

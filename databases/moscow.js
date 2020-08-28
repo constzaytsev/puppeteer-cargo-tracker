@@ -3,7 +3,7 @@ import sanitizeHtml from 'sanitize-html';
 import { minify } from 'html-minifier';
 import NoResultsError from '../plugins/NoResultsError';
 
-export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject) => {
+export default async (cargoPrefix, cargoNumber) => {
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox'],
@@ -12,20 +12,23 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
   try {
     const page = await browser.newPage();
     await page.goto('https://www.moscow-cargo.com/', {
-      timeout: 10000,
+      timeout: 5000,
     });
-    await page.evaluate((prefix, number) => {
-      document.querySelector('[name="status_search"]').value = prefix;
-      document.querySelector('[name="status_search-2"]').value = number;
-    }, cargoPrefix, cargoNumber);
-    const inputElement = await page.$('input#getstatus');
-    await Promise.all([
-      page.waitForResponse('https://www.moscow-cargo.com/api/statusawb_v3'),
-      inputElement.click(),
-    ]);
+
+    try {
+      await page.evaluate((prefix, number) => {
+        document.querySelector('[name="status_search"]').value = prefix;
+        document.querySelector('[name="status_search-2"]').value = number;
+      }, cargoPrefix, cargoNumber);
+      const inputElement = await page.$('input#getstatus');
+      await inputElement.click();
+      await page.waitForResponse('https://www.moscow-cargo.com/intapi/statusawb_v3');
+    } catch (e) {
+      throw new Error('Something wrong Moscow');
+    }
 
     if (await page.$('.cpwi-table tbody#status tr') === null) {
-      return reject(new NoResultsError('No results'));
+      throw new NoResultsError('No results');
     }
 
     const data = await page.evaluate(() => document.querySelector('.cpwi-table').outerHTML);
@@ -33,10 +36,8 @@ export default (cargoPrefix, cargoNumber) => new Promise(async (resolve, reject)
       collapseWhitespace: true,
     });
 
-    return resolve(html);
-  } catch (e) {
-    return reject(e);
+    return html;
   } finally {
-    browser.close();
+    await browser.close();
   }
-});
+};
