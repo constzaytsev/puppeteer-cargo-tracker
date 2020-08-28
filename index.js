@@ -9,6 +9,8 @@ import Pulkovo from './databases/pulkovo';
 import Domodedovo from './databases/domodedovo';
 import Moscow from './databases/moscow';
 
+const PORT = process.env.PORT || 5000;
+
 const app = express();
 
 Sentry.init({
@@ -55,7 +57,7 @@ app.use((req, res) => {
   res.status(404).end(); // not found
 });
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
   /* eslint no-console: 0 */
-  console.log('App listening on port 5000!');
+  console.log(`Listening on ${PORT}`);
 });
