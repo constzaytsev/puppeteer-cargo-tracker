@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.29.0",
+    "@sentry/node": "^6.2.1",
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "esm": "^3.2.25",
