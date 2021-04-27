@@ -33,6 +33,7 @@ app.get('/track', async (req, res) => {
       },
     });
   } catch (e) {
+    console.log(e);
     return res.json({
       result: {
         error: 'Не найдено',
