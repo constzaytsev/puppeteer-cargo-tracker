@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import cache from './plugins/cache';
+// import cache from './plugins/cache';
 import Pulkovo from './databases/pulkovo';
 // import S7 from './databases/s7';
 
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 
-app.get('/track', cache(600), async (req, res) => {
+app.get('/track', async (req, res) => {
   const cargoPrefix = req.query.prefix;
   const cargoNumber = req.query.number;
 
