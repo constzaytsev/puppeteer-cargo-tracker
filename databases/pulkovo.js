@@ -21,10 +21,12 @@ export default async (cargoPrefix, cargoNumber) => {
       await inputElement.click();
       await page.waitForResponse('https://pulkovo-cargo.ru/site/tracking');
     } catch (e) {
+      console.log(e);
       throw new Error('Something wrong Pulkovo');
     }
 
     if (await page.$('.tracking-table') === null) {
+      console.log(e);
       throw new NoResultsError('No results');
     }
 
