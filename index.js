@@ -1,15 +1,18 @@
 import express from 'express';
 import cors from 'cors';
-// import cache from './plugins/cache';
+import apicache from 'apicache';
 import Pulkovo from './databases/pulkovo';
 // import S7 from './databases/s7';
-
+apicache.options({
+  appendKey: (req, res) => req.query.number,
+});
 const PORT = process.env.PORT || 5000;
 const app = express();
+const cache = apicache.middleware;
 
 app.use(cors());
 
-app.get('/track', async (req, res) => {
+app.get('/track', cache('5 minutes'), async (req, res) => {
   const cargoPrefix = req.query.prefix;
   const cargoNumber = req.query.number;
 
