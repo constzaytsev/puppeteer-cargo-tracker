@@ -4,10 +4,7 @@ import { minify } from 'html-minifier';
 import NoResultsError from '../plugins/NoResultsError';
 
 export default async (cargoPrefix, cargoNumber) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox'],
-  });
+  const browser = await puppeteer.launch();
 
   try {
     const page = await browser.newPage();

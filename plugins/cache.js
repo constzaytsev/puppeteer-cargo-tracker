@@ -1,6 +1,6 @@
 import mcache from 'memory-cache';
 
-export default duration => (req, res, next) => {
+export default (duration) => (req, res, next) => {
   const key = `__express__${req.originalUrl}` || req.url;
   const cachedBody = mcache.get(key);
   if (cachedBody) {
