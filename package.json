@@ -15,7 +15,7 @@
     "express": "^4.17.1",
     "html-minifier": "^4.0.0",
     "node-cache": "^5.1.2",
-    "puppeteer": "^8.0.0",
+    "puppeteer": "^9.0.0",
     "sanitize-html": "^2.3.3"
   },
   "devDependencies": {
