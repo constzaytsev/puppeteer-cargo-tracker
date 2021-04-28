@@ -10,14 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.30.0",
-    "apicache": "^1.6.2",
-    "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "html-minifier": "^4.0.0",
-    "memory-cache": "^0.2.0",
+    "node-cache": "^5.1.2",
     "puppeteer": "^8.0.0",
     "sanitize-html": "^2.3.3"
   },
